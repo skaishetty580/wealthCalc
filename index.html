@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthCalc - Personal Finance Tools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>WealthCalc</h1>
+    <p>Free Smart Tools for Your Money</p>
+    <label for="toolSelector">Select Calculator:</label>
+    <select id="toolSelector" onchange="showTool(this.value)">
+        <option value="mortgage">Mortgage Calculator</option>
+        <option value="savings">Savings Calculator</option>
+        <option value="retirement">Retirement Calculator</option>
+        <option value="debt">Debt Payoff Calculator</option>
+        <option value="budget">Budget Planner</option>
+        <option value="investment">Investment Growth Calculator</option>
+        <option value="emergency">Emergency Fund Calculator</option>
+        <option value="creditcard">Credit Card Payoff</option>
+        <option value="networth">Net Worth Tracker</option>
+    </select>
+</header>
+
+<div id="mortgage" class="tool-section">
+    <h2>Mortgage Calculator</h2>
+    <label>Loan Amount: <input id="loan" type="number" value="300000"></label>
+    <label>Interest Rate (%): <input id="rate" type="number" value="4.5"></label>
+    <label>Years: <input id="years" type="number" value="30"></label>
+    <button onclick="calculateMortgage()">Calculate</button>
+    <p id="mortgageResult"></p>
+</div>
+<div id="savings" class="tool-section" style="display:none;">
+    <h2>Savings Calculator</h2>
+    <label>Initial Amount: <input id="initial" type="number" value="10000"></label>
+    <label>Monthly Addition: <input id="monthly" type="number" value="200"></label>
+    <label>Years: <input id="saveYears" type="number" value="10"></label>
+    <label>Interest Rate (%): <input id="saveRate" type="number" value="5"></label>
+    <button onclick="calculateSavings()">Calculate</button>
+    <p id="savingsResult"></p>
+</div>
+<div id="retirement" class="tool-section" style="display:none;">
+    <h2>Retirement Calculator</h2>
+    <label>Current Age: <input id="retireAge" type="number" value="30"></label>
+    <label>Retirement Age: <input id="goalAge" type="number" value="65"></label>
+    <label>Current Savings: <input id="currentSave" type="number" value="50000"></label>
+    <label>Monthly Contribution: <input id="monthlySave" type="number" value="500"></label>
+    <label>Expected Annual Return (%): <input id="returnRate" type="number" value="6"></label>
+    <button onclick="calculateRetirement()">Calculate</button>
+    <p id="retirementResult"></p>
+</div>
+<div id="debt" class="tool-section" style="display:none;">
+    <h2>Debt Payoff Calculator</h2>
+    <label>Debt Amount: <input id="debtAmount" type="number" value="10000"></label>
+    <label>Monthly Payment: <input id="monthlyPayment" type="number" value="300"></label>
+    <label>Interest Rate (%): <input id="debtRate" type="number" value="7"></label>
+    <button onclick="calculateDebtPayoff()">Calculate</button>
+    <p id="debtResult"></p>
+</div>
+<div id="budget" class="tool-section" style="display:none;">
+    <h2>Budget Planner</h2>
+    <label>Monthly Income: <input id="budgetIncome" type="number" value="4000"></label>
+    <label>Total Monthly Expenses: <input id="budgetExpenses" type="number" value="2500"></label>
+    <button onclick="calculateBudget()">Calculate</button>
+    <p id="budgetResult"></p>
+</div>
+<div id="investment" class="tool-section" style="display:none;">
+    <h2>Investment Growth Calculator</h2>
+    <label>Initial Investment: <input id="invInitial" type="number" value="10000"></label>
+    <label>Monthly Contribution: <input id="invMonthly" type="number" value="500"></label>
+    <label>Years: <input id="invYears" type="number" value="15"></label>
+    <label>Annual Return Rate (%): <input id="invRate" type="number" value="7"></label>
+    <button onclick="calculateInvestment()">Calculate</button>
+    <p id="investmentResult"></p>
+</div>
+<div id="emergency" class="tool-section" style="display:none;">
+    <h2>Emergency Fund Calculator</h2>
+    <label>Monthly Expenses: <input id="emergencyExpenses" type="number" value="3000"></label>
+    <label>Months of Coverage: <input id="emergencyMonths" type="number" value="6"></label>
+    <button onclick="calculateEmergencyFund()">Calculate</button>
+    <p id="emergencyResult"></p>
+</div>
+<div id="creditcard" class="tool-section" style="display:none;">
+    <h2>Credit Card Payoff Calculator</h2>
+    <label>Balance: <input id="cardBalance" type="number" value="5000"></label>
+    <label>Monthly Payment: <input id="cardPayment" type="number" value="300"></label>
+    <label>Interest Rate (%): <input id="cardRate" type="number" value="18"></label>
+    <button onclick="calculateCardPayoff()">Calculate</button>
+    <p id="cardResult"></p>
+</div>
+<div id="networth" class="tool-section" style="display:none;">
+    <h2>Net Worth Tracker</h2>
+    <label>Total Assets: <input id="assets" type="number" value="150000"></label>
+    <label>Total Liabilities: <input id="liabilities" type="number" value="50000"></label>
+    <button onclick="calculateNetWorth()">Calculate</button>
+    <p id="netWorthResult"></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
