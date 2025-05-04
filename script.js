@@ -2,86 +2,103 @@ function showTool(id) {
     document.querySelectorAll('.tool-section').forEach(sec => sec.style.display = 'none');
     document.getElementById(id).style.display = 'block';
 }
+
+// Mortgage Calculator with amortization
 function calculateMortgage() {
     const loan = parseFloat(document.getElementById('loan').value);
     const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-    const years = parseFloat(document.getElementById('years').value) * 12;
-    const payment = loan * rate / (1 - Math.pow(1 + rate, -years));
-    document.getElementById('mortgageResult').innerText = 'Monthly Payment: $' + payment.toFixed(2);
-}
-function calculateSavings() {
-    const initial = parseFloat(document.getElementById('initial').value);
-    const monthly = parseFloat(document.getElementById('monthly').value);
-    const years = parseFloat(document.getElementById('saveYears').value);
-    const rate = parseFloat(document.getElementById('saveRate').value) / 100 / 12;
-    const months = years * 12;
-    let futureValue = initial * Math.pow(1 + rate, months);
-    for (let i = 1; i <= months; i++) {
-        futureValue += monthly * Math.pow(1 + rate, months - i);
+    const years = parseFloat(document.getElementById('years').value);
+    const n = years * 12;
+
+    if (loan <= 0 || rate < 0 || years <= 0) {
+        document.getElementById('mortgageResult').innerText = 'Please enter valid loan details.';
+        return;
     }
-    document.getElementById('savingsResult').innerText = 'Future Savings Value: $' + futureValue.toFixed(2);
-}
-function calculateRetirement() {
-    const currentAge = parseInt(document.getElementById('retireAge').value);
-    const goalAge = parseInt(document.getElementById('goalAge').value);
-    const currentSave = parseFloat(document.getElementById('currentSave').value);
-    const monthlySave = parseFloat(document.getElementById('monthlySave').value);
-    const returnRate = parseFloat(document.getElementById('returnRate').value) / 100 / 12;
-    const months = (goalAge - currentAge) * 12;
-    let futureValue = currentSave * Math.pow(1 + returnRate, months);
-    for (let i = 1; i <= months; i++) {
-        futureValue += monthlySave * Math.pow(1 + returnRate, months - i);
+
+    const payment = loan * rate / (1 - Math.pow(1 + rate, -n));
+    document.getElementById('mortgageResult').innerText =
+        'Monthly Payment: $' + payment.toFixed(2);
+
+    let balance = loan;
+    let totalInterest = 0;
+    let output = '<table border="1" cellpadding="6" cellspacing="0" style="margin-top:10px;"><tr><th>Payment #</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>';
+    for (let i = 1; i <= n; i++) {
+        const interest = balance * rate;
+        const principal = payment - interest;
+        totalInterest += interest;
+        balance -= principal;
+        if (balance < 0) balance = 0;
+        output += `<tr><td>${i}</td><td>$${principal.toFixed(2)}</td><td>$${interest.toFixed(2)}</td><td>$${balance.toFixed(2)}</td></tr>`;
     }
-    document.getElementById('retirementResult').innerText = 'Estimated Retirement Savings: $' + futureValue.toFixed(2);
+    output += '</table>';
+    document.getElementById('mortgageResult').insertAdjacentHTML("afterend",
+        '<br>Total Interest: $' + totalInterest.toFixed(2) + '<br>' + output);
 }
+
+// Debt Payoff Calculator with breakdown
 function calculateDebtPayoff() {
     let balance = parseFloat(document.getElementById('debtAmount').value);
     const payment = parseFloat(document.getElementById('monthlyPayment').value);
     const rate = parseFloat(document.getElementById('debtRate').value) / 100 / 12;
     let months = 0;
-    while (balance > 0 && months < 600) {
-        balance += balance * rate - payment;
-        if (balance < 0) balance = 0;
-        months++;
+
+    if (balance <= 0 || payment <= 0) {
+        document.getElementById('debtResult').innerText = 'Please enter valid debt and payment info.';
+        return;
     }
-    document.getElementById('debtResult').innerText = 'Payoff Time: ' + Math.floor(months / 12) + ' years and ' + (months % 12) + ' months';
+
+    let totalInterest = 0;
+    let output = '<table border="1" cellpadding="6" cellspacing="0" style="margin-top:10px;"><tr><th>Month</th><th>Interest</th><th>Principal</th><th>Balance</th></tr>';
+
+    while (balance > 0 && months < 600) {
+        const interest = balance * rate;
+        const principal = payment - interest;
+        balance -= principal;
+        if (balance < 0) balance = 0;
+        totalInterest += interest;
+        months++;
+        output += `<tr><td>${months}</td><td>$${interest.toFixed(2)}</td><td>$${principal.toFixed(2)}</td><td>$${balance.toFixed(2)}</td></tr>`;
+    }
+
+    const years = Math.floor(months / 12);
+    const remMonths = months % 12;
+
+    document.getElementById('debtResult').innerText = "See breakdown below:";
+    document.getElementById('debtResult').insertAdjacentHTML("afterend",
+        'Debt paid off in: ' + years + ' years and ' + remMonths + ' months' +
+        '<br>Total Interest Paid: $' + totalInterest.toFixed(2) + '<br>' + output + '</table>');
 }
-function calculateBudget() {
-    const income = parseFloat(document.getElementById('budgetIncome').value);
-    const expenses = parseFloat(document.getElementById('budgetExpenses').value);
-    document.getElementById('budgetResult').innerText = 'Estimated Monthly Savings: $' + (income - expenses).toFixed(2);
-}
+
+// Investment Growth Calculator with breakdown
 function calculateInvestment() {
     const initial = parseFloat(document.getElementById('invInitial').value);
     const monthly = parseFloat(document.getElementById('invMonthly').value);
     const years = parseFloat(document.getElementById('invYears').value);
     const rate = parseFloat(document.getElementById('invRate').value) / 100 / 12;
     const months = years * 12;
-    let futureValue = initial * Math.pow(1 + rate, months);
+
+    if (initial < 0 || monthly < 0 || years <= 0 || rate < 0) {
+        document.getElementById('investmentResult').innerText = 'Enter valid investment details.';
+        return;
+    }
+
+    let balance = initial;
+    let totalContributions = initial;
+    let output = '<table border="1" cellpadding="6" cellspacing="0" style="margin-top:10px;"><tr><th>Month</th><th>Contributed</th><th>Interest</th><th>Balance</th></tr>';
+
     for (let i = 1; i <= months; i++) {
-        futureValue += monthly * Math.pow(1 + rate, months - i);
+        const interest = balance * rate;
+        balance += interest + monthly;
+        totalContributions += monthly;
+        output += `<tr><td>${i}</td><td>$${monthly.toFixed(2)}</td><td>$${interest.toFixed(2)}</td><td>$${balance.toFixed(2)}</td></tr>`;
     }
-    document.getElementById('investmentResult').innerText = 'Investment Value: $' + futureValue.toFixed(2);
-}
-function calculateEmergencyFund() {
-    const expenses = parseFloat(document.getElementById('emergencyExpenses').value);
-    const months = parseFloat(document.getElementById('emergencyMonths').value);
-    document.getElementById('emergencyResult').innerText = 'Recommended Emergency Fund: $' + (expenses * months).toFixed(2);
-}
-function calculateCardPayoff() {
-    let balance = parseFloat(document.getElementById('cardBalance').value);
-    const payment = parseFloat(document.getElementById('cardPayment').value);
-    const rate = parseFloat(document.getElementById('cardRate').value) / 100 / 12;
-    let months = 0;
-    while (balance > 0 && months < 600) {
-        balance += balance * rate - payment;
-        if (balance < 0) balance = 0;
-        months++;
-    }
-    document.getElementById('cardResult').innerText = 'Payoff Time: ' + Math.floor(months / 12) + ' years and ' + (months % 12) + ' months';
-}
-function calculateNetWorth() {
-    const assets = parseFloat(document.getElementById('assets').value);
-    const liabilities = parseFloat(document.getElementById('liabilities').value);
-    document.getElementById('netWorthResult').innerText = 'Net Worth: $' + (assets - liabilities).toFixed(2);
+
+    const totalInterest = balance - totalContributions;
+
+    document.getElementById('investmentResult').innerText = "See investment growth below:";
+    document.getElementById('investmentResult').insertAdjacentHTML("afterend",
+        'Estimated Investment Value: $' + balance.toFixed(2) +
+        '<br>Total Contributions: $' + totalContributions.toFixed(2) +
+        '<br>Total Interest Earned: $' + totalInterest.toFixed(2) +
+        '<br>' + output + '</table>');
 }
